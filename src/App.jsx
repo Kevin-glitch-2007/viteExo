@@ -1,42 +1,115 @@
-import { useState } from 'react'
-import './style.css'
-import './App.css'
+import { useState } from "react"
+import "./style.css"
+import "./App.css"
 
 function App() {
 
   /* =========================
      STATES
   ========================== */
+
+  // Liste complète des tâches
   const [todos, setTodos] = useState([])
+
+  // Texte tapé dans l'input
   const [newTodo, setNewTodo] = useState("")
+
+  // Step sélectionné (one, two, three, four)
   const [selectedStep, setSelectedStep] = useState("one")
 
+  // Filtre actif : All | Active | Completed
+  const [filter, setFilter] = useState("All")
+
+
+
   /* =========================
-     AJOUT AVEC ENTRÉE
+     AJOUT D’UNE TÂCHE (Entrée)
   ========================== */
   const handleKeyDown = (e) => {
+
     if (e.key === "Enter") {
 
       const trimmed = newTodo.trim()
+
+      // Empêche ajout vide
       if (trimmed === "") return
 
+      // Ajout nouvelle tâche
       setTodos(prev => [
         ...prev,
         {
           id: Date.now(),
           text: trimmed,
-          step: selectedStep
+          step: selectedStep,
+          completed: false
         }
       ])
 
+      // Réinitialise l’input
       setNewTodo("")
     }
   }
 
+
+
+  /* =========================
+     TOGGLE COMPLETED
+     (Clique sur une tâche)
+  ========================== */
+  const toggleCompleted = (id) => {
+
+    setTodos(prev =>
+      prev.map(todo =>
+        todo.id === id
+          ? { ...todo, completed: !todo.completed }
+          : todo
+      )
+    )
+  }
+
+
+
+  /* =========================
+     CLEAR COMPLETED
+  ========================== */
+  const clearCompleted = () => {
+
+    // Supprime toutes les tâches completed
+    setTodos(prev =>
+      prev.filter(todo => !todo.completed)
+    )
+  }
+
+
+
+  /* =========================
+     FILTRAGE DES TÂCHES
+  ========================== */
+  const filteredTodos = () => {
+
+    switch (filter) {
+
+      case "Active":
+        return todos.filter(todo => !todo.completed)
+
+      case "Completed":
+        return todos.filter(todo => todo.completed)
+
+      default:
+        return todos // All
+    }
+  }
+
+
+
+  /* =========================
+     RENDER
+  ========================== */
   return (
     <div className="back-noire">
       <div className="page">
 
+        {/* ================= HEADER ================= */}
         <div className="bg-top">
           <h2>T O D O ☀️</h2>
         </div>
@@ -44,11 +117,10 @@ function App() {
         <div className="bg-bottom">
           <div className="cards-wrapper">
 
-            {/* =========================
-               CARTE INPUT
-            ========================== */}
+            {/* ================= INPUT CARD ================= */}
             <div className="todo-card todo-input">
               <div className="new-todo">
+
                 <input type="radio" />
 
                 <input
@@ -59,90 +131,107 @@ function App() {
                   onChange={(e) => setNewTodo(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
+
               </div>
             </div>
 
-            {/* =========================
-               CARTE ONE → FOUR
-            ========================== */}
+
+
+            {/* ================= STEPS CARD ================= */}
             <div className="todo-card todo-list">
+
+              {/* Steps one - four */}
               <div className="steps">
-
-                <label>
-                  <input
-                    type="radio"
-                    name="steps"
-                    value="one"
-                    checked={selectedStep === "one"}
-                    onChange={(e) => setSelectedStep(e.target.value)}
-                  />
-                  <span>one</span>
-                </label>
-
-                <label>
-                  <input
-                    type="radio"
-                    name="steps"
-                    value="two"
-                    checked={selectedStep === "two"}
-                    onChange={(e) => setSelectedStep(e.target.value)}
-                  />
-                  <span>two</span>
-                </label>
-
-                <label>
-                  <input
-                    type="radio"
-                    name="steps"
-                    value="three"
-                    checked={selectedStep === "three"}
-                    onChange={(e) => setSelectedStep(e.target.value)}
-                  />
-                  <span>three</span>
-                </label>
-
-                <label>
-                  <input
-                    type="radio"
-                    name="steps"
-                    value="four"
-                    checked={selectedStep === "four"}
-                    onChange={(e) => setSelectedStep(e.target.value)}
-                  />
-                  <span>four</span>
-                </label>
-
+                {["one", "two", "three", "four"].map(step => (
+                  <label key={step}>
+                    <input
+                      type="radio"
+                      name="steps"
+                      value={step}
+                      checked={selectedStep === step}
+                      onChange={(e) => setSelectedStep(e.target.value)}
+                    />
+                    <span>{step}</span>
+                  </label>
+                ))}
               </div>
 
-              {/* INFOS EN BAS (conservées) */}
-              <div className="card-footer">
-                <span>{todos.length} items left</span>
 
+
+              {/* ================= FOOTER ================= */}
+              <div className="card-footer">
+
+                {/* 🔥 Compteur intelligent :
+                    compte uniquement les tâches non complétées */}
+                <span>
+                  {todos.filter(todo => !todo.completed).length} items left
+                </span>
+
+                {/* 🔥 Filtres */}
                 <div className="filters">
-                  <span className="active">All</span>
-                  <span>Active</span>
-                  <span>Completed</span>
+
+                  <span
+                    className={filter === "All" ? "active" : ""}
+                    onClick={() => setFilter("All")}
+                  >
+                    All
+                  </span>
+
+                  <span
+                    className={filter === "Active" ? "active" : ""}
+                    onClick={() => setFilter("Active")}
+                  >
+                    Active
+                  </span>
+
+                  <span
+                    className={filter === "Completed" ? "active" : ""}
+                    onClick={() => setFilter("Completed")}
+                  >
+                    Completed
+                  </span>
+
                 </div>
 
-                <span>Clear Completed</span>
+                {/* 🗑 Clear Completed */}
+                <span
+                  onClick={clearCompleted}
+                  style={{ cursor: "pointer" }}
+                >
+                  Clear Completed
+                </span>
+
               </div>
             </div>
 
-            {/* =========================
-               LISTE AJOUTÉE EN BAS
-               (SANS CASE RONDE)
-            ========================== */}
-            {todos.length > 0 && (
+
+
+            {/* ================= LISTE AJOUTÉE (séparée) ================= */}
+            {filteredTodos().length > 0 && (
+
               <div className="todo-card todo-added-list">
 
-                {todos.map(todo => (
-                  <div key={todo.id} className="added-item">
+                {filteredTodos().map(todo => (
+
+                  <div
+                    key={todo.id}
+                    className="added-item"
+                    onClick={() => toggleCompleted(todo.id)}
+                    style={{
+                      textDecoration: todo.completed ? "line-through" : "none",
+                      opacity: todo.completed ? 0.5 : 1,
+                      cursor: "pointer"
+                    }}
+                  >
                     <strong>{todo.step}</strong> — {todo.text}
                   </div>
+
                 ))}
 
               </div>
             )}
+
+
 
             <span className="drag-text">
               Drag and drop to reorder list
