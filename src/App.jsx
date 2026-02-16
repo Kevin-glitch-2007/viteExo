@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react" 
 import "./style.css"
 import "./App.css"
 
@@ -8,16 +8,13 @@ function App() {
      STATES
   ========================== */
 
-  // Liste complète des tâches
+  // Liste des tâches
   const [todos, setTodos] = useState([])
 
-  // Texte tapé dans l'input
+  // Texte de l'input
   const [newTodo, setNewTodo] = useState("")
 
-  // Step sélectionné (one, two, three, four)
-  const [selectedStep, setSelectedStep] = useState("one")
-
-  // Filtre actif : All | Active | Completed
+  // Filtre actif
   const [filter, setFilter] = useState("All")
 
 
@@ -30,22 +27,17 @@ function App() {
     if (e.key === "Enter") {
 
       const trimmed = newTodo.trim()
+      if (!trimmed) return
 
-      // Empêche ajout vide
-      if (trimmed === "") return
-
-      // Ajout nouvelle tâche
       setTodos(prev => [
         ...prev,
         {
           id: Date.now(),
           text: trimmed,
-          step: selectedStep,
-          completed: false
+          completed: false // par défaut décoché
         }
       ])
 
-      // Réinitialise l’input
       setNewTodo("")
     }
   }
@@ -53,15 +45,14 @@ function App() {
 
 
   /* =========================
-     TOGGLE COMPLETED
-     (Clique sur une tâche)
+     TOGGLE COMPLETED (multi-sélection)
+     🔹 maintenant on peut décocher une case déjà cochée
   ========================== */
   const toggleCompleted = (id) => {
-
     setTodos(prev =>
       prev.map(todo =>
         todo.id === id
-          ? { ...todo, completed: !todo.completed }
+          ? { ...todo, completed: !todo.completed } // inverse l'état
           : todo
       )
     )
@@ -73,8 +64,6 @@ function App() {
      CLEAR COMPLETED
   ========================== */
   const clearCompleted = () => {
-
-    // Supprime toutes les tâches completed
     setTodos(prev =>
       prev.filter(todo => !todo.completed)
     )
@@ -96,15 +85,12 @@ function App() {
         return todos.filter(todo => todo.completed)
 
       default:
-        return todos // All
+        return todos
     }
   }
 
 
 
-  /* =========================
-     RENDER
-  ========================== */
   return (
     <div className="back-noire">
       <div className="page">
@@ -118,11 +104,10 @@ function App() {
           <div className="cards-wrapper">
 
             {/* ================= INPUT CARD ================= */}
-            <div className="todo-card todo-input">
+            <div className="todo-card">
+
               <div className="new-todo">
-
-                <input type="radio" />
-
+                {/* 🔹 Plus de case ronde ici */}
                 <input
                   type="text"
                   className="todo-text-input"
@@ -131,45 +116,49 @@ function App() {
                   onChange={(e) => setNewTodo(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
-
               </div>
+
             </div>
 
 
 
-            {/* ================= STEPS CARD ================= */}
-            <div className="todo-card todo-list">
+            {/* ================= LISTE PREND LA PLACE ================= */}
+            <div className="todo-card">
 
-              {/* Steps one - four */}
-              <div className="steps">
-                {["one", "two", "three", "four"].map(step => (
-                  <label key={step}>
+              {/* LISTE DES TÂCHES */}
+              {filteredTodos().map(todo => (
+                <div key={todo.id} className="steps">
+                  <label>
+
+                    {/* 🔵 Case ronde fonctionnelle et toggle */}
                     <input
-                      type="radio"
-                      name="steps"
-                      value={step}
-                      checked={selectedStep === step}
-                      onChange={(e) => setSelectedStep(e.target.value)}
+                      type="radio" // garde radio pour design
+                      checked={todo.completed}
+                      onChange={() => toggleCompleted(todo.id)}
                     />
-                    <span>{step}</span>
+
+                    <span
+                      style={{
+                        textDecoration: todo.completed ? "line-through" : "none",
+                        opacity: todo.completed ? 0.5 : 1
+                      }}
+                    >
+                      {todo.text}
+                    </span>
+
                   </label>
-                ))}
-              </div>
+                </div>
+              ))}
 
 
 
-              {/* ================= FOOTER ================= */}
+              {/* ================= FOOTER (INTOUCHÉ) ================= */}
               <div className="card-footer">
-
-                {/* 🔥 Compteur intelligent :
-                    compte uniquement les tâches non complétées */}
                 <span>
                   {todos.filter(todo => !todo.completed).length} items left
                 </span>
 
-                {/* 🔥 Filtres */}
                 <div className="filters">
-
                   <span
                     className={filter === "All" ? "active" : ""}
                     onClick={() => setFilter("All")}
@@ -190,46 +179,17 @@ function App() {
                   >
                     Completed
                   </span>
-
                 </div>
 
-                {/* 🗑 Clear Completed */}
                 <span
                   onClick={clearCompleted}
                   style={{ cursor: "pointer" }}
                 >
                   Clear Completed
                 </span>
-
               </div>
+
             </div>
-
-
-
-            {/* ================= LISTE AJOUTÉE (séparée) ================= */}
-            {filteredTodos().length > 0 && (
-
-              <div className="todo-card todo-added-list">
-
-                {filteredTodos().map(todo => (
-
-                  <div
-                    key={todo.id}
-                    className="added-item"
-                    onClick={() => toggleCompleted(todo.id)}
-                    style={{
-                      textDecoration: todo.completed ? "line-through" : "none",
-                      opacity: todo.completed ? 0.5 : 1,
-                      cursor: "pointer"
-                    }}
-                  >
-                    <strong>{todo.step}</strong> — {todo.text}
-                  </div>
-
-                ))}
-
-              </div>
-            )}
 
 
 

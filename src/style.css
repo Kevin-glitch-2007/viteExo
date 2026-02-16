@@ -8,7 +8,7 @@
 }
 
 /* =========================
-   BODY
+   BODY PRINCIPAL
 ========================= */
 .back-noire {
     background-color: black;
@@ -25,7 +25,7 @@
 }
 
 /* =========================
-   BACKGROUND HAUT
+   BACKGROUND HAUT (IMAGE)
 ========================= */
 .bg-top {
     height: 40vh;
@@ -38,6 +38,7 @@
     justify-content: center;
 }
 
+/* Titre */
 .bg-top h2 {
     color: white;
     letter-spacing: 8px;
@@ -59,12 +60,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: -80px; /* remonte sur l'image */
+    margin-top: -80px; /* remonte la carte sur l'image */
     gap: 16px;
 }
 
 /* =========================
-   BASE DES CARTES
+   STYLE GÉNÉRAL DES CARTES
 ========================= */
 .todo-card {
     width: 100%;
@@ -100,13 +101,14 @@
 }
 
 /* =========================
-   LISTE DES STEPS (one-four)
+   LISTE DES TÂCHES
 ========================= */
 .steps {
     display: flex;
     flex-direction: column;
 }
 
+/* Ligne individuelle */
 .steps label {
     display: flex;
     align-items: center;
@@ -118,10 +120,9 @@
 }
 
 /* =========================
-   CASE RONDE DESIGN
+   CASE RONDE DESIGN (LISTE UNIQUEMENT)
 ========================= */
-.steps input[type="radio"],
-.new-todo input[type="radio"] {
+.steps input[type="radio"] {
     appearance: none;
     width: 20px;
     height: 20px;
@@ -136,8 +137,8 @@
     cursor: pointer;
 }
 
-.steps input[type="radio"]::before,
-.new-todo input[type="radio"]::before {
+/* Icône check */
+.steps input[type="radio"]::before {
     content: "✓";
     font-size: 12px;
     color: white;
@@ -145,24 +146,22 @@
     transition: 0.15s;
 }
 
-.steps input[type="radio"]:checked,
-.new-todo input[type="radio"]:checked {
+/* Quand coché */
+.steps input[type="radio"]:checked {
     background: linear-gradient(135deg, #3b82f6, #b153dd);
 }
 
-.steps input[type="radio"]:checked::before,
-.new-todo input[type="radio"]:checked::before {
+.steps input[type="radio"]:checked::before {
     transform: scale(1);
 }
 
 /* =========================
-   FOOTER CARTE (IMPORTANT)
-   → TOUT SUR UNE SEULE LIGNE
+   FOOTER DE LA CARTE
 ========================= */
 .card-footer {
-    display: flex;                 /* active le mode ligne */
-    align-items: center;           /* aligne verticalement */
-    justify-content: space-between;/* espace entre gauche / centre / droite */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border-top: 1px solid #2f2f2f;
     padding: 14px 0;
     font-size: 14px;
@@ -170,45 +169,26 @@
 }
 
 /* =========================
-   FILTRES (All Active Completed)
+   FILTRES
 ========================= */
 .filters {
-    display: flex;     /* IMPORTANT pour éviter colonne */
+    display: flex;
     gap: 12px;
     align-items: center;
-}
-
-/* filtre actif */
-.filters .active {
-    color: #3b82f6;
-    font-weight: bold;
-    cursor: pointer;
 }
 
 .filters span {
     cursor: pointer;
 }
 
-/* =========================
-   LISTE AJOUTÉE EN BAS
-   (SANS CASE RONDE)
-========================= */
-.todo-added-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.added-item {
-    background: #1a1a1a;
-    padding: 10px 14px;
-    border-radius: 6px;
-    color: #e5e5e5;
-    font-size: 14px;
+/* Filtre actif */
+.filters .active {
+    color: #3b82f6;
+    font-weight: bold;
 }
 
 /* =========================
-   TEXTE DRAG
+   TEXTE DRAG & DROP
 ========================= */
 .drag-text {
     margin-top: 20px;
