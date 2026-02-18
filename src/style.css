@@ -29,7 +29,7 @@
 ========================= */
 .bg-top {
     height: 40vh;
-    background-image: url("./public/back.jpg"); /* adapte si besoin */
+    background-image: url("./public/back.jpg");
     background-size: cover;
     background-position: center;
 
@@ -60,7 +60,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: -80px; /* remonte la carte sur l'image */
+    margin-top: -80px;
     gap: 16px;
 }
 
@@ -119,44 +119,52 @@
     border-bottom: 1px solid #2f2f2f;
 }
 
-/* =========================
-   CASE RONDE DESIGN (LISTE UNIQUEMENT)
-========================= */
-.steps input[type="radio"] {
+/* =========================================================
+   CASE RONDE DESIGN
+   🔥 Maintenant en type="checkbox"
+   MAIS visuellement identique à l'ancien radio
+========================================================= */
+.steps input[type="checkbox"] {
+
+    /* Supprime le style natif navigateur */
     appearance: none;
+
     width: 20px;
     height: 20px;
     border-radius: 50%;
 
+    /* Bordure + fond sombre */
     background: linear-gradient(#111, #111) padding-box,
                 linear-gradient(135deg, #7e7e7e) border-box;
 
     border: 2px solid transparent;
+
     display: grid;
     place-items: center;
     cursor: pointer;
 }
 
-/* Icône check */
-.steps input[type="radio"]::before {
+/* Icône check cachée par défaut */
+.steps input[type="checkbox"]::before {
     content: "✓";
     font-size: 12px;
     color: white;
     transform: scale(0);
-    transition: 0.15s;
+    transition: 0.15s ease;
 }
 
-/* Quand coché */
-.steps input[type="radio"]:checked {
+/* Quand coché → gradient bleu/violet */
+.steps input[type="checkbox"]:checked {
     background: linear-gradient(135deg, #3b82f6, #b153dd);
 }
 
-.steps input[type="radio"]:checked::before {
+/* Quand coché → on affiche le check */
+.steps input[type="checkbox"]:checked::before {
     transform: scale(1);
 }
 
 /* =========================
-   FOOTER DE LA CARTE
+   FOOTER
 ========================= */
 .card-footer {
     display: flex;
@@ -181,14 +189,13 @@
     cursor: pointer;
 }
 
-/* Filtre actif */
 .filters .active {
     color: #3b82f6;
     font-weight: bold;
 }
 
 /* =========================
-   TEXTE DRAG & DROP
+   TEXTE DRAG
 ========================= */
 .drag-text {
     margin-top: 20px;
